@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:p88_admin/app/bloc/bloc/auth_bloc.dart';
+import 'package:p88_admin/app/domain/entity/auth.dart';
 import 'package:p88_admin/app/persentation/widget/button.dart';
 import 'package:p88_admin/util/color_item.dart';
 import 'package:p88_admin/app/persentation/page/auth/login/controller.dart';
@@ -14,41 +15,82 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('LoginPage rendered');
+    final controller = LoginController();
     return Scaffold(
       body: SizedBox.expand(
         child: CustomPaint(
-            painter: CustomGrid(),
-            child: Center(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40.w),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      LoginBox(),
-                    ],
+          painter: CustomGrid(),
+          child: BlocConsumer<AuthBloc, AuthState>(
+            listenWhen: (previous, current) {
+              if(previous != current) {
+                return true;
+              }
+              return false;
+            },
+            listener: (context, state) {
+              if(state is ErrorAuthState) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(controller.errorSnackbar(state.message));
+              }
+            },
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  Center(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 40.w),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            LoginBox(loginController: controller),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )),
+                  if (state is LoadingState) circularLoading(),
+                ],
+              );
+            },
+          )
+        ),
       ),
+    );
+  }
+
+  Widget circularLoading() {
+    return Container(
+      decoration: BoxDecoration(color: ColorItem.bgBlackOpacity),
+      child: Center(
+          child: SizedBox(
+        child: CircularProgressIndicator(
+          strokeWidth: 8,
+          color: ColorItem.tertiary,
+        ),
+        width: 90,
+        height: 90,
+      )),
     );
   }
 }
 
 class LoginBox extends StatefulWidget {
-  const LoginBox({super.key});
+  const LoginBox({
+    super.key,
+    required this.loginController
+  });
+
+  final LoginController loginController;
 
   @override
   State<LoginBox> createState() => _LoginBoxState();
 }
 
 class _LoginBoxState extends State<LoginBox> {
-  final controller = loginController();
-
   @override
   Widget build(BuildContext context) {
+    LoginController controller = widget.loginController;
     final authBloc = RepositoryProvider.of<AuthBloc>(context);
     controller.init(authBloc);
     return Form(
@@ -64,22 +106,21 @@ class _LoginBoxState extends State<LoginBox> {
           children: [
             Text(
               'Sign In To Project88',
-              style: TextStyle(fontSize: 33.sp, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 33.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(
               height: 60.h,
             ),
             TextFormFiledEmail(
-              onTapOutside: controller.onTapOutside, 
-              textController: controller.emailController
-            ),
+                onTapOutside: controller.onTapOutside,
+                textController: controller.emailController),
             SizedBox(
               height: 10,
-            ),  
-            TextFormFieldPassword(
-              onTapOutside: controller.onTapOutside,
-              textController: controller.passwordController
             ),
+            TextFormFieldPassword(
+                onTapOutside: controller.onTapOutside,
+                textController: controller.passwordController),
             SizedBox(
               height: 40,
             ),
@@ -121,23 +162,20 @@ class CustomGrid extends CustomPainter {
 }
 
 class TextFormFieldPassword extends StatefulWidget {
-  const TextFormFieldPassword({
-    super.key,
-    required this.onTapOutside,
-    required this.textController
-  });
+  const TextFormFieldPassword(
+      {super.key, required this.onTapOutside, required this.textController});
 
   final Function(PointerDownEvent event) onTapOutside;
   final TextEditingController textController;
-  
+
   String? validator(String? value) {
-    if(value != null && value.isEmpty) {
+    if (value != null && value.isEmpty) {
       return 'password can not be null';
     }
-    if(value != null && value.isNotEmpty && !value.isValidPassword()) {
+    if (value != null && value.isNotEmpty && !value.isValidPassword()) {
       return 'password is not valid';
     }
-    return null ;
+    return null;
   }
 
   @override
@@ -155,65 +193,58 @@ class _TextFormFieldPasswordState extends State<TextFormFieldPassword> {
   @override
   Widget build(BuildContext context) {
     debugPrint('password rendered');
-    return 
-    Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.only(left: 5.w),
           child: Text(
             'Password',
-            style:
-                TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
           ),
         ),
         TextFormField(
-          obscureText: isPasswordHide,
-          onTapOutside: widget.onTapOutside,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          decoration: InputDecoration(
-              fillColor: ColorItem.tertiary,
-              hintText: '*******',
-              suffixIcon: IconButton(
-                icon: Icon(isPasswordHide
-                    ? Icons.visibility_off
-                    : Icons.visibility),
-                onPressed: onTapHidePassword,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 1),
-                borderRadius: BorderRadius.circular(7.r),
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(width: 1),
-                borderRadius: BorderRadius.circular(7.r),
-              )),
-          controller: widget.textController,
-          validator: widget.validator
-        ),
+            obscureText: isPasswordHide,
+            onTapOutside: widget.onTapOutside,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: InputDecoration(
+                fillColor: ColorItem.tertiary,
+                hintText: '*******',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                      isPasswordHide ? Icons.visibility_off : Icons.visibility),
+                  onPressed: onTapHidePassword,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 1),
+                  borderRadius: BorderRadius.circular(7.r),
+                ),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(width: 1),
+                  borderRadius: BorderRadius.circular(7.r),
+                )),
+            controller: widget.textController,
+            validator: widget.validator),
       ],
     );
   }
 }
 
 class TextFormFiledEmail extends StatefulWidget {
-  const TextFormFiledEmail({
-    super.key,
-    required this.onTapOutside,
-    required this.textController
-  });
+  const TextFormFiledEmail(
+      {super.key, required this.onTapOutside, required this.textController});
 
   final Function(PointerDownEvent event) onTapOutside;
   final TextEditingController textController;
 
   String? validator(String? value) {
-    if(value != null && value.isEmpty) {
+    if (value != null && value.isEmpty) {
       return 'email can not be null';
     }
-    if(value != null && value.isNotEmpty && !value.isValidEmail()) {
+    if (value != null && value.isNotEmpty && !value.isValidEmail()) {
       return 'email is not valid';
     }
-    return null ;
+    return null;
   }
 
   @override
@@ -223,36 +254,33 @@ class TextFormFiledEmail extends StatefulWidget {
 class _TextFormFiledEmailState extends State<TextFormFiledEmail> {
   @override
   Widget build(BuildContext context) {
-    return 
-    Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: EdgeInsets.only(left: 5.w),
           child: Text(
             'Email',
-            style: TextStyle(
-                fontSize: 17.sp, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
           ),
         ),
         TextFormField(
-          onTapOutside: widget.onTapOutside,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          decoration: InputDecoration(
-            fillColor: ColorItem.tertiary,
-            hintText: 'example@email.com',
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(width: 1),
-              borderRadius: BorderRadius.circular(7),
+            onTapOutside: widget.onTapOutside,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            decoration: InputDecoration(
+              fillColor: ColorItem.tertiary,
+              hintText: 'example@email.com',
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(width: 1),
+                borderRadius: BorderRadius.circular(7),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(width: 1),
+                borderRadius: BorderRadius.circular(7.r),
+              ),
             ),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(width: 1),
-              borderRadius: BorderRadius.circular(7.r),
-            ),
-          ),
-          controller: widget.textController,
-          validator: widget.validator
-        ),
+            controller: widget.textController,
+            validator: widget.validator),
       ],
     );
   }

@@ -9,12 +9,14 @@ class AuthLoginDto {
     this.id,
     this.name,
     this.email,
+    this.isAdmin = false,
   });
 
   String token;
   int? id;
   String? name;
   String? email;
+  bool isAdmin;
 
   Auth mapperToEntity() {
     return Auth(
@@ -44,12 +46,14 @@ class AuthLoginDto {
 
       if (user['name'] is String &&
           user['email'] is String &&
+          user['is_admin'] is bool &&
           authorization['token'] is String &&
           authorization['type'] is String) {
         return AuthLoginDto(
           token: authorization['token'],
           name: user['name'],
           email: user['email'],
+          isAdmin: user['is_admin']
         );
       }
     }

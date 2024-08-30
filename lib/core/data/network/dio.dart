@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:network_inspector/common/utils/dio_interceptor.dart';
 import 'package:network_inspector/network_inspector.dart';
+import 'package:p88_admin/util/environment.dart';
 
 class DioConfig {
   final dio = Dio();
@@ -8,7 +9,7 @@ class DioConfig {
 
   void configureDio() {
     // Set default configs
-    dio.options.baseUrl = 'https://74d1-202-93-229-42.ngrok-free.app/api';
+    dio.options.baseUrl = ENV.backendBaseUrl+'/api/';
     dio.options.connectTimeout = Duration(seconds: 5);
     dio.options.receiveTimeout = Duration(seconds: 3);
     dio.options.responseType = ResponseType.json;

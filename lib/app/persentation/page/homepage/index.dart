@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:p88_admin/app/bloc/bloc/auth_bloc.dart';
 import 'package:p88_admin/util/color_item.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,6 +24,9 @@ class _HomePageState extends State<HomePage> {
           decoration: BoxDecoration(
             color: ColorItem.primary
           ),
+          child: ElevatedButton(onPressed: () => {
+            context.read<AuthBloc>().add(AuthLogoutEvent())
+          }, child: Text('logout')),
         ),
       ),
     );

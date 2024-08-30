@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class AuthCache {
   void saveToken(String? value);
   Future<String?> getToken();
+  void deleteToken();
 }
 
 class AuthCacheImpl extends AuthCache{
@@ -41,5 +42,11 @@ class AuthCacheImpl extends AuthCache{
       throw e;
     }
   }
+  
+  @override
+  void deleteToken() {
+    // TODO: implement deleteToken
+  }
 
+  
 }

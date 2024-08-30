@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:p88_admin/app/bloc/bloc/auth_bloc.dart';
-import 'package:p88_admin/util/extension.dart';
+import 'package:p88_admin/util/color_item.dart';
 
-class loginController {
+class LoginController {
   final formLoginKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -31,4 +30,16 @@ class loginController {
   void onTapOutside(PointerDownEvent event) {
     FocusManager.instance.primaryFocus?.unfocus();
   }
+
+  SnackBar errorSnackbar(String message) {
+    return SnackBar(
+      backgroundColor: Colors.red,
+      content: Text(message, style: TextStyle(color: ColorItem.primary),),
+    );
+  }
+
+  // final snackBar = SnackBar(
+  //   backgroundColor: Colors.red,
+  //   content: Text('Yay! A SnackBar!', style: TextStyle(color: ColorItem.primary),),
+  // );
 }

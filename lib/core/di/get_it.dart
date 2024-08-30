@@ -3,6 +3,7 @@ import 'package:p88_admin/app/bloc/bloc/auth_bloc.dart';
 import 'package:p88_admin/app/data/repository/AuthRepository.dart';
 import 'package:p88_admin/app/data/source/local/auth_cache.dart';
 import 'package:p88_admin/app/data/source/network/dio/auth.dart';
+import 'package:p88_admin/app/domain/usecase/auth/check_authenticate.dart';
 import 'package:p88_admin/app/domain/usecase/auth/login_usecase.dart';
 import 'package:p88_admin/core/data/network/dio.dart';
 
@@ -31,8 +32,14 @@ setUpServiceLocator() async {
   //auth
   injector.registerLazySingleton<AuthCache>(() => AuthCacheImpl());
   injector.registerLazySingleton<AuthDio>(() => AuthDioImpl(dioConfig: injector<DioConfig>()));
+  //// repository
   injector.registerLazySingleton<Authrepository>(() => AuthrepositoryImpl(authCache: injector<AuthCache>(), authDio: injector<AuthDio>()));
+  //// usecase
   injector.registerLazySingleton<LoginUsecase>(() => LoginUsecase(authRepository: injector<Authrepository>()));
+  injector.registerLazySingleton<CheckAuthenticateUseCase>(() => CheckAuthenticateUseCase(authRepository: injector<Authrepository>()));
   //// bloc auth
-  injector.registerFactory<AuthBloc>(() => AuthBloc(loginUsecase: injector<LoginUsecase>()));
+  injector.registerFactory<AuthBloc>(() => AuthBloc(loginUsecase: injector<LoginUsecase>(), checkAuthenticateUseCase: injector<CheckAuthenticateUseCase>()));
+
+
+
 }

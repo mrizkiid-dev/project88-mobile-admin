@@ -8,10 +8,10 @@ import 'package:p88_admin/app/bloc/bloc/auth_bloc.dart';
 import 'package:p88_admin/core/data/network/dio.dart';
 import 'package:p88_admin/core/di/get_it.dart';
 import 'package:p88_admin/app/persentation/page/errors/in_progress.dart';
-import 'package:network_inspector/network_inspector.dart';
 import 'dart:io' show Platform;
 
 import 'package:p88_admin/core/router/router.dart';
+import 'package:p88_admin/util/bloc.dart';
 
 
 void main() async{
@@ -23,6 +23,7 @@ void main() async{
   await setUpServiceLocator();
   // set dio
   injector<DioConfig>().configureDio();
+  Bloc.observer = const AppBlocObserver();
   runApp(const MyApp());
 }
 
@@ -51,31 +52,47 @@ class App extends StatelessWidget {
   const App({super.key});
 
   ThemeData _buildTheme(brightness) {
-  var baseTheme = ThemeData(brightness: brightness);
-
-  return baseTheme.copyWith(
-    textTheme: GoogleFonts.inconsolataTextTheme(baseTheme.textTheme),
-  );
+    var baseTheme = ThemeData(brightness: brightness);
+    return baseTheme.copyWith(
+      textTheme: GoogleFonts.inconsolataTextTheme(baseTheme.textTheme),
+    );
   }
-
 
   @override
   Widget build(BuildContext context) {
     if (Platform.isAndroid) {
-      return MaterialApp.router(
-        routerConfig: AppRoute.router,
-        theme: _buildTheme(Brightness.light),
+      return BlocListener<AuthBloc, AuthState>(
+        listenWhen: (previous, current) {
+          if(previous != current) {
+            return true;
+          }
+          return false;
+        },
+        listener: (context, state) {
+          AppRoute.router.refresh();
+        },
+        child: MaterialApp.router(
+          routerConfig: AppRoute.router,
+          theme: _buildTheme(Brightness.light),
+        ),
       );
     } 
 
     if (Platform.isIOS) {
-      // return CupertinoApp.router(
-      //   routerConfig: router,
-      //   theme: _buildTheme(Brightness.light),
-      // );
-      return MaterialApp.router(
-        routerConfig: AppRoute.router,
-        theme: _buildTheme(Brightness.light),
+      return BlocListener<AuthBloc, AuthState>(
+        listenWhen: (previous, current) {
+          if(previous != current) {
+            return true;
+          }
+          return false;
+        },
+        listener: (context, state) {
+          AppRoute.router.refresh();
+        },
+        child: MaterialApp.router(
+          routerConfig: AppRoute.router,
+          theme: _buildTheme(Brightness.light),
+        ),
       );
     }
 

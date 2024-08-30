@@ -37,6 +37,10 @@ class AuthDioImpl extends AuthDio {
       final json = response.data as Json;
       final authDto = AuthLoginDto.fromJson(json);
 
+      if(!authDto.isAdmin) {
+        throw NetworkFailure(message: 'forbidden',statusCode: 403);
+      }
+
       debugPrint('AuthDioImpl = '+response.toString());
       debugPrint('AuthDioImpl response data = '+response.data.toString());
       return right(authDto.mapperToEntity());
