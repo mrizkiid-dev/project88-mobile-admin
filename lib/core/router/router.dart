@@ -33,7 +33,9 @@ class AppRoute {
       redirect: (context, state) {
         if(context.read<AuthBloc>().state is AuthenticatedState) {
           return Pages.HOMEPAGE_PATH;
-        } else {
+        } 
+
+        if(context.read<AuthBloc>().state is UnAuthenticatedState) {
           return Pages.LOGIN_PATH;
         }
       },

@@ -13,18 +13,16 @@ class DioConfig {
     dio.options.connectTimeout = Duration(seconds: 5);
     dio.options.receiveTimeout = Duration(seconds: 3);
     dio.options.responseType = ResponseType.json;
+  }
 
-    // dio.interceptors.add(
-    //   DioInterceptor(
-    //     logIsAllowed: true,
-    //     networkInspector: networkInspector,
-    //     onHttpFinish: (hashCode, title, message) {
-    //       notifyActivity(
-    //         title: title,
-    //         message: message,
-    //       );
-    //     },
-    //   )
-    // );
+  void interceptorsToken(String token) {
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          options.headers['Authorization'] = 'Bearer '+token;
+          return handler.next(options);
+        },
+      ),
+    );
   }
 }

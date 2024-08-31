@@ -19,7 +19,6 @@ void main() async{
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  // NetworkInspector.initialize();
   await setUpServiceLocator();
   // set dio
   injector<DioConfig>().configureDio();
@@ -60,8 +59,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authBloc = RepositoryProvider.of<AuthBloc>(context);
     if (Platform.isAndroid) {
       return BlocListener<AuthBloc, AuthState>(
+        bloc: authBloc,
         listenWhen: (previous, current) {
           if(previous != current) {
             return true;
@@ -69,7 +70,9 @@ class App extends StatelessWidget {
           return false;
         },
         listener: (context, state) {
-          AppRoute.router.refresh();
+          if(state is AuthenticatedState || state is UnAuthenticatedState) {
+             AppRoute.router.refresh();
+          }
         },
         child: MaterialApp.router(
           routerConfig: AppRoute.router,
@@ -80,6 +83,7 @@ class App extends StatelessWidget {
 
     if (Platform.isIOS) {
       return BlocListener<AuthBloc, AuthState>(
+        bloc: authBloc,
         listenWhen: (previous, current) {
           if(previous != current) {
             return true;
@@ -87,7 +91,9 @@ class App extends StatelessWidget {
           return false;
         },
         listener: (context, state) {
-          AppRoute.router.refresh();
+          if(state is AuthenticatedState || state is UnAuthenticatedState) {
+             AppRoute.router.refresh();
+          }
         },
         child: MaterialApp.router(
           routerConfig: AppRoute.router,

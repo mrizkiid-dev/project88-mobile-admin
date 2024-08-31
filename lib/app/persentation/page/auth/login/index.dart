@@ -1,10 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:p88_admin/app/bloc/bloc/auth_bloc.dart';
-import 'package:p88_admin/app/domain/entity/auth.dart';
+import 'package:p88_admin/app/persentation/widget/auth/auth_container_background.dart';
 import 'package:p88_admin/app/persentation/widget/button.dart';
 import 'package:p88_admin/util/color_item.dart';
 import 'package:p88_admin/app/persentation/page/auth/login/controller.dart';
@@ -16,61 +14,18 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = LoginController();
-    return Scaffold(
-      body: SizedBox.expand(
-        child: CustomPaint(
-          painter: CustomGrid(),
-          child: BlocConsumer<AuthBloc, AuthState>(
-            listenWhen: (previous, current) {
-              if(previous != current) {
-                return true;
-              }
-              return false;
-            },
-            listener: (context, state) {
-              if(state is ErrorAuthState) {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(controller.errorSnackbar(state.message));
-              }
-            },
-            builder: (context, state) {
-              return Stack(
-                children: [
-                  Center(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 40.w),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            LoginBox(loginController: controller),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (state is LoadingState) circularLoading(),
-                ],
-              );
-            },
-          )
+    return AuthContainerBackground(
+      widget: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 40.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LoginBox(loginController: controller),
+            ],
+          ),
         ),
       ),
-    );
-  }
-
-  Widget circularLoading() {
-    return Container(
-      decoration: BoxDecoration(color: ColorItem.bgBlackOpacity),
-      child: Center(
-          child: SizedBox(
-        child: CircularProgressIndicator(
-          strokeWidth: 8,
-          color: ColorItem.tertiary,
-        ),
-        width: 90,
-        height: 90,
-      )),
     );
   }
 }
@@ -133,32 +88,6 @@ class _LoginBoxState extends State<LoginBox> {
       ),
     );
   }
-}
-
-class CustomGrid extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint backgroundPaint = Paint()..color = ColorItem.secondary;
-    canvas.drawRect(
-        Rect.fromLTWH(0, 0, size.width, size.height), backgroundPaint);
-
-    Paint paint = Paint()
-      ..color = Colors.grey
-      ..strokeWidth = 1.0;
-
-    double spacing = 50.0;
-
-    for (double i = 0; i <= size.height; i += spacing) {
-      canvas.drawLine(Offset(0, i), Offset(size.width, i), paint);
-    }
-
-    for (double i = 0; i <= size.width; i += spacing) {
-      canvas.drawLine(Offset(i, 0), Offset(i, size.height), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
 class TextFormFieldPassword extends StatefulWidget {

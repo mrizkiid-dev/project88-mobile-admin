@@ -9,6 +9,7 @@ abstract class Authrepository {
   Future<void> saveToken(String? value);
   Future<String?> getToken();
   Future<Either<NetworkFailure, Auth>> login({required String email, required String password});
+  Future<bool> logout();
 }
 
 class AuthrepositoryImpl extends Authrepository {
@@ -34,6 +35,10 @@ class AuthrepositoryImpl extends Authrepository {
   Future<Either<NetworkFailure, Auth>> login({required String email, required String password}) {
     return _authDio.login(email: email, password: password);
   }
-
+  
+  @override
+  Future<bool> logout() {
+    return _authDio.logout();
+  }
 
 }
