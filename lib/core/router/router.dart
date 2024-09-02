@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:p88_admin/app/bloc/bloc/auth_bloc.dart';
+import 'package:p88_admin/app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:p88_admin/app/persentation/page/auth/login/index.dart';
 import 'package:p88_admin/app/persentation/page/errors/in_progress.dart';
 import 'package:p88_admin/app/persentation/page/homepage/index.dart';
 import 'package:p88_admin/core/router/util.dart';
-import 'package:p88_admin/main.dart';
 
 class AppRoute {
-
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
   static final GoRouter _router = GoRouter(

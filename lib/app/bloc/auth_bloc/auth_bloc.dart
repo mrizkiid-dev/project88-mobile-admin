@@ -57,11 +57,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           throw FormatException('logout failed');
         }
         emit(UnAuthenticatedState());
-      } on UnauthenticatedError {
+      } on UnauthenticatedException {
         emit(UnAuthenticatedState());
       } catch (e) {
         emit(ErrorAuthState(message: 'logout fail'));
       }
+    });
+
+    on<UnAuthenticatedEvent>((event, emit) async {
+      emit(UnAuthenticatedState());
     });
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:p88_admin/app/bloc/bloc/auth_bloc.dart';
+import 'package:p88_admin/app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:p88_admin/app/persentation/widget/auth/auth_container_background.dart';
 import 'package:p88_admin/app/persentation/widget/button.dart';
 import 'package:p88_admin/util/color_item.dart';
@@ -46,7 +46,7 @@ class _LoginBoxState extends State<LoginBox> {
   @override
   Widget build(BuildContext context) {
     LoginController controller = widget.loginController;
-    final authBloc = RepositoryProvider.of<AuthBloc>(context);
+    final authBloc = BlocProvider.of<AuthBloc>(context);
     controller.init(authBloc);
     return Form(
       key: controller.formLoginKey,

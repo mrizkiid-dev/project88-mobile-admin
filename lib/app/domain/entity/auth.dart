@@ -1,19 +1,19 @@
-import 'package:equatable/equatable.dart';
+import 'package:p88_admin/app/domain/entity/enitity.dart';
+import 'package:p88_admin/app/domain/entity/user.dart';
 
-class Auth with EquatableMixin {
+class Auth {
   Auth({
     required this.token,
-    this.id,
-    this.name,
-    this.email
+    required this.user
   });
 
   String token;
-  int? id;
-  String? name;
-  String? email;
+  User user;
+  // int? id;
+  // String? name;
+  // String? email;
   
   @override
-  List<Object?> get props => [token, id, name, email];
+  List<Object?> get props => [token];
 
 }

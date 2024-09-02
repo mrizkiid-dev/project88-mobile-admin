@@ -1,12 +1,12 @@
 import 'package:p88_admin/core/response/error/abstract_failure.dart';
 
-class UnauthenticatedError extends Failure {
-  UnauthenticatedError({
-    required this.message,
+class UnauthenticatedException extends Failure {
+  UnauthenticatedException({
+    this.message = 'UnAuthorize',
     this.statusCode = 500
   });
 
-  final String message;
+  final String? message;
   final int? statusCode;
 
   String toString() {

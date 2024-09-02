@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:p88_admin/app/data/repository/AuthRepository.dart';
-import 'package:p88_admin/app/domain/usecase/use_case.dart';
+import 'package:p88_admin/app/data/repository/auth_repository.dart';
+import 'package:p88_admin/app/domain/usecase/contract/use_case.dart';
 
 class GetAuthToken extends UseCaseWithoutParams<Future<String?>> {
   GetAuthToken(this._authRepository);

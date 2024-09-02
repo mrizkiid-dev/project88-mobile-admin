@@ -1,18 +1,20 @@
 import 'package:dio/dio.dart';
-import 'package:network_inspector/common/utils/dio_interceptor.dart';
 import 'package:network_inspector/network_inspector.dart';
 import 'package:p88_admin/util/environment.dart';
 
 class DioConfig {
-  final dio = Dio();
-  final networkInspector = NetworkInspector();
+  DioConfig({
+    required this.dio
+  });
+  final Dio dio;
 
-  void configureDio() {
-    // Set default configs
+  factory DioConfig.configure() {
+    final dio = Dio();
     dio.options.baseUrl = ENV.backendBaseUrl+'/api/';
-    dio.options.connectTimeout = Duration(seconds: 5);
-    dio.options.receiveTimeout = Duration(seconds: 3);
+    dio.options.connectTimeout = Duration(seconds: 10);
+    dio.options.receiveTimeout = Duration(seconds: 10);
     dio.options.responseType = ResponseType.json;
+    return DioConfig(dio: dio);
   }
 
   void interceptorsToken(String token) {
@@ -21,6 +23,9 @@ class DioConfig {
         onRequest: (options, handler) {
           options.headers['Authorization'] = 'Bearer '+token;
           return handler.next(options);
+        },
+        onError: (error, handler) {
+          return handler.next(error);
         },
       ),
     );

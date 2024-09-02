@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:p88_admin/app/data/repository/AuthRepository.dart';
+import 'package:p88_admin/app/data/repository/auth_repository.dart';
 import 'package:p88_admin/app/domain/entity/auth.dart';
-import 'package:p88_admin/app/domain/usecase/params.dart';
-import 'package:p88_admin/app/domain/usecase/use_case.dart';
+import 'package:p88_admin/app/domain/usecase/contract/params.dart';
+import 'package:p88_admin/app/domain/usecase/contract/use_case.dart';
 import 'package:p88_admin/core/response/error/abstract_failure.dart';
 import 'package:p88_admin/core/response/error/network_failure.dart';
 
@@ -30,15 +30,7 @@ class LoginUsecase extends UseCaseFetch<ParamLoginUsecase, Auth> {
   
   @override
   Future<Either<NetworkFailure, Auth>> execute(ParamLoginUsecase params) async {
-    final result = await _authrepository.login(email: params.email, password: params.password);
-      result.fold(
-        (failed) => {}, 
-        (success) async{
-          await _authrepository.saveToken(success.token);
-          final token = await _authrepository.getToken() ?? '';
-          debugPrint('token dapet uy = '+ token);
-        });
-        
+    final result = await _authrepository.login(email: params.email, password: params.password);       
     return result;
   }
 }

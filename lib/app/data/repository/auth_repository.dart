@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:p88_admin/app/data/source/local/auth_cache.dart';
 import 'package:p88_admin/app/data/source/network/dio/auth.dart';
 import 'package:p88_admin/app/domain/entity/auth.dart';
-import 'package:p88_admin/core/response/error/cache_failure.dart';
 import 'package:p88_admin/core/response/error/network_failure.dart';
 
 abstract class Authrepository {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:p88_admin/app/bloc/bloc/auth_bloc.dart';
+import 'package:p88_admin/app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:p88_admin/util/color_item.dart';
 
 class LoginController {
@@ -20,10 +20,8 @@ class LoginController {
   }
 
   void onLoginPressed() {
-    debugPrint('email: ${emailController.text}, password: ${passwordController.text}');
-    _authBloc?.add(AuthLoginEvent(email: emailController.text, password: passwordController.text));
     if(formLoginKey.currentState!.validate()) {
-      // _authBloc?.add(AuthLoginEvent(email: emailController.text, password: passwordController.text));
+      _authBloc?.add(AuthLoginEvent(email: emailController.text, password: passwordController.text));
     }
   }
 
@@ -38,8 +36,4 @@ class LoginController {
     );
   }
 
-  // final snackBar = SnackBar(
-  //   backgroundColor: Colors.red,
-  //   content: Text('Yay! A SnackBar!', style: TextStyle(color: ColorItem.primary),),
-  // );
 }

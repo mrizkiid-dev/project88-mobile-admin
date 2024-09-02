@@ -1,19 +1,13 @@
-import 'package:dartz/dartz.dart';
-import 'package:p88_admin/app/data/dto/auth_login_dto.dart';
-import 'package:p88_admin/app/domain/entity/auth.dart';
-import 'package:p88_admin/core/response/error/cache_failure.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthCache {
-  void saveToken(String? value);
+  Future<void> saveToken(String? value);
   Future<String?> getToken();
-  void deleteToken();
+  Future<void> deleteToken();
 }
 
 class AuthCacheImpl extends AuthCache{
-
   String _token = 'Token';
-
   @override
   Future<String?> getToken() async {
     try {
@@ -30,7 +24,7 @@ class AuthCacheImpl extends AuthCache{
   }
 
   @override
-  void saveToken(String? value) async{
+  Future<void> saveToken(String? value) async{
     try {
       if(value != null && value != '') {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -44,8 +38,13 @@ class AuthCacheImpl extends AuthCache{
   }
   
   @override
-  void deleteToken() {
-    // TODO: implement deleteToken
+  Future<void> deleteToken() async{
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_token);
+    } catch (e) {
+      
+    }
   }
 
   

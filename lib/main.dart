@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:p88_admin/app/bloc/bloc/auth_bloc.dart';
-import 'package:p88_admin/core/data/network/dio.dart';
+import 'package:p88_admin/app/bloc/auth_bloc/auth_bloc.dart';
+import 'package:p88_admin/app/persentation/page/homepage/bloc/home_page_bloc.dart';
 import 'package:p88_admin/core/di/get_it.dart';
 import 'package:p88_admin/app/persentation/page/errors/in_progress.dart';
 import 'dart:io' show Platform;
@@ -20,8 +20,6 @@ void main() async{
     DeviceOrientation.portraitUp,
   ]);
   await setUpServiceLocator();
-  // set dio
-  injector<DioConfig>().configureDio();
   Bloc.observer = const AppBlocObserver();
   runApp(const MyApp());
 }
@@ -39,6 +37,9 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider.value(
             value: injector<AuthBloc>(),
+          ),
+          BlocProvider.value(
+            value: injector<HomePageBloc>(),
           ),
         ],
         child: App(),
@@ -59,7 +60,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authBloc = RepositoryProvider.of<AuthBloc>(context);
+    final authBloc = BlocProvider.of<AuthBloc>(context);
     if (Platform.isAndroid) {
       return BlocListener<AuthBloc, AuthState>(
         bloc: authBloc,
