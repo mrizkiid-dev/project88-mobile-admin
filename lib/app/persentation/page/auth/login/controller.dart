@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:p88_admin/app/bloc/auth_bloc/auth_bloc.dart';
-import 'package:p88_admin/util/color_item.dart';
+import 'package:p88_admin/core/controller.dart';
 
-class LoginController {
+class LoginController extends Controller {
   final formLoginKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -28,12 +28,20 @@ class LoginController {
   void onTapOutside(PointerDownEvent event) {
     FocusManager.instance.primaryFocus?.unfocus();
   }
-
-  SnackBar errorSnackbar(String message) {
-    return SnackBar(
-      backgroundColor: Colors.red,
-      content: Text(message, style: TextStyle(color: ColorItem.primary),),
-    );
+  
+  @override
+  void didChangeDependencies(BuildContext context) {
+  }
+  
+  @override
+  void dispose() {
+    _authBloc = null;
+    emailController.dispose();
+    passwordController.dispose();
+  }
+  
+  @override
+  void initState() {
   }
 
 }

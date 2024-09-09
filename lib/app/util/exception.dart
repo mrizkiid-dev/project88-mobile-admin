@@ -12,7 +12,7 @@ class UtilException {
     }
     final statusCode = dioException.response?.statusCode;
     if(statusCode != null && (statusCode != 401 || statusCode != 403)) {
-      return UnauthenticatedException();
+      return UnauthenticatedException(type: EnumUnauthenticatedType.defaultMessage);
     } 
     return dioException;
   }

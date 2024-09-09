@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:network_inspector/network_inspector.dart';
-import 'package:p88_admin/util/environment.dart';
+import 'package:p88_admin/app/util/environment.dart';
 
 class DioConfig {
   DioConfig({

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:p88_admin/app/bloc/auth_bloc/auth_bloc.dart';
 import 'package:p88_admin/app/persentation/widget/loading/loading_overlay.dart';
-import 'package:p88_admin/app/persentation/widget/snackbar.dart';
+import 'package:p88_admin/app/persentation/widget/snackbar/error_snackbar.dart';
+import 'package:p88_admin/core/di/get_it.dart';
 
 class StateListenerHelper {
   StateListenerHelper();
+
+  final scaffoldMessengerKey = injector<GlobalKey<ScaffoldMessengerState>>();
 
   void loading<T>(Object currentState, BuildContext context) {
     if(currentState is T) {
@@ -16,10 +19,9 @@ class StateListenerHelper {
     }
   }
 
-  void showAuthErrorSnackbar(Object currentState, BuildContext context) {
+  void showAuthErrorSnackbar<T>(Object currentState) {
     if(currentState is ErrorAuthState) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBarError().run(currentState.message));
+      ShowErrorSnackbar().run(message: currentState.message);
     }
   }
 }

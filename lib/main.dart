@@ -5,13 +5,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:p88_admin/app/bloc/auth_bloc/auth_bloc.dart';
-import 'package:p88_admin/app/persentation/page/homepage/bloc/home_page_bloc.dart';
+import 'package:p88_admin/app/persentation/page/root/bloc/root_bloc.dart';
+import 'package:p88_admin/app/persentation/page/root_chat/bloc/chat_bloc.dart';
+import 'package:p88_admin/app/persentation/page/root_home/bloc/homepage_bloc.dart';
+import 'package:p88_admin/app/persentation/page/root_order/bloc/order_bloc.dart';
+import 'package:p88_admin/app/persentation/page/root_product/bloc/product_bloc.dart';
 import 'package:p88_admin/core/di/get_it.dart';
 import 'package:p88_admin/app/persentation/page/errors/in_progress.dart';
 import 'dart:io' show Platform;
 
 import 'package:p88_admin/core/router/router.dart';
-import 'package:p88_admin/util/bloc.dart';
+import 'package:p88_admin/app/util/bloc.dart';
 
 
 void main() async{
@@ -36,10 +40,22 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider.value(
-            value: injector<AuthBloc>(),
+            value: injector<AuthBloc>()..add(AuthenticatedCheckEvent()),
           ),
           BlocProvider.value(
-            value: injector<HomePageBloc>(),
+            value: injector<RootPageBloc>(),
+          ),
+          BlocProvider.value(
+            value: injector<HomeBloc>()
+          ),
+          BlocProvider.value(
+            value: injector<ProductBloc>()
+          ),
+          BlocProvider.value(
+            value: injector<OrderBloc>()
+          ),
+          BlocProvider.value(
+            value: injector<ChatBloc>()
           ),
         ],
         child: App(),
@@ -60,9 +76,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldMessengerKey = injector<GlobalKey<ScaffoldMessengerState>>();
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    if (Platform.isAndroid) {
+    if (Platform.isAndroid || Platform.isIOS) {
       return BlocListener<AuthBloc, AuthState>(
+
         bloc: authBloc,
         listenWhen: (previous, current) {
           if(previous != current) {
@@ -71,6 +89,8 @@ class App extends StatelessWidget {
           return false;
         },
         listener: (context, state) {
+          // StateListenerHelper().showAuthErrorSnackbar(state, context);
+          // StateListenerHelper().loading<AuthLoadingState>(state, context);
           if(state is AuthenticatedState || state is UnAuthenticatedState) {
              AppRoute.router.refresh();
           }
@@ -78,30 +98,11 @@ class App extends StatelessWidget {
         child: MaterialApp.router(
           routerConfig: AppRoute.router,
           theme: _buildTheme(Brightness.light),
+          debugShowCheckedModeBanner: false,
+          scaffoldMessengerKey: scaffoldMessengerKey,
         ),
       );
     } 
-
-    if (Platform.isIOS) {
-      return BlocListener<AuthBloc, AuthState>(
-        bloc: authBloc,
-        listenWhen: (previous, current) {
-          if(previous != current) {
-            return true;
-          }
-          return false;
-        },
-        listener: (context, state) {
-          if(state is AuthenticatedState || state is UnAuthenticatedState) {
-             AppRoute.router.refresh();
-          }
-        },
-        child: MaterialApp.router(
-          routerConfig: AppRoute.router,
-          theme: _buildTheme(Brightness.light),
-        ),
-      );
-    }
 
     return InProgressPage(message: 'Still In Progress',);
   }

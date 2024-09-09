@@ -5,7 +5,8 @@ import 'package:p88_admin/app/data/source/local/auth_cache.dart';
 import 'package:p88_admin/app/data/source/utils_source.dart';
 import 'package:p88_admin/app/domain/entity/user.dart';
 import 'package:p88_admin/core/data/network/dio.dart';
-import 'package:p88_admin/util/type.dart';
+import 'package:p88_admin/core/response/error/network_failure.dart';
+import 'package:p88_admin/app/util/type.dart';
 
 abstract class UserDio {
   Future<User> getUser();

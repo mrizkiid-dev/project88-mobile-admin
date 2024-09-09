@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:p88_admin/app/data/dto/contract/abstract_dto.dart';
-import 'package:p88_admin/app/domain/entity/enitity.dart';
 import 'package:p88_admin/app/domain/entity/user.dart';
-import 'package:p88_admin/util/type.dart';
+import 'package:p88_admin/app/util/type.dart';
 
 class UserDto extends DTO<User> {
   UserDto({

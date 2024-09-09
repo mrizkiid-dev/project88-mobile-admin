@@ -1,10 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:p88_admin/app/data/dto/user_dto.dart';
 import 'package:p88_admin/app/domain/entity/user.dart';
 import 'package:p88_admin/core/di/get_it.dart';
 import 'package:p88_admin/core/response/error/cache_failure.dart';
-import 'package:p88_admin/util/type.dart';
+import 'package:p88_admin/app/util/type.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class UserCache {
@@ -26,7 +27,7 @@ class UserCacheImpl extends UserCache {
       final userJson = jsonDecode(user) as Json ;
       return UserDto.mapperFromJson(userJson).mapperToEntity();
     }
-    throw CacheFailure(message: 'user not found');
+    throw CacheFailure(type: EnumCacheType.dataNotFound);
   }
 
   @override
@@ -35,7 +36,8 @@ class UserCacheImpl extends UserCache {
       final prefs = await injector<SharedPreferences>();
       await prefs.setString(_userKey, user);
     } catch (e) {
-      throw CacheFailure(message: 'save user failed - '+e.toString());
+      debugPrint('error UserCacheImpl = '+ e.toString());
+      throw CacheFailure(type: EnumCacheType.internalError);
     }
   }
 

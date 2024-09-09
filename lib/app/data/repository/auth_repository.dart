@@ -7,7 +7,7 @@ import 'package:p88_admin/core/response/error/network_failure.dart';
 abstract class Authrepository {
   Future<void> saveToken(String? value);
   Future<String?> getToken();
-  Future<Either<NetworkFailure, Auth>> login({required String email, required String password});
+  Future<Auth> login({required String email, required String password});
   Future<bool> logout();
 }
 
@@ -31,7 +31,7 @@ class AuthrepositoryImpl extends Authrepository {
   }
   
   @override
-  Future<Either<NetworkFailure, Auth>> login({required String email, required String password}) {
+  Future<Auth> login({required String email, required String password}) {
     return _authDio.login(email: email, password: password);
   }
   

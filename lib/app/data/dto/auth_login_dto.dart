@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:p88_admin/app/data/dto/contract/abstract_dto.dart';
 import 'package:p88_admin/app/domain/entity/auth.dart';
 import 'package:p88_admin/app/domain/entity/user.dart';
-import 'package:p88_admin/util/type.dart';
+import 'package:p88_admin/app/util/type.dart';
 
 class AuthLoginDto extends DTO<Auth> {
   AuthLoginDto({

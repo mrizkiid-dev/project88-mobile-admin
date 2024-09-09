@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:p88_admin/app/bloc/app_bloc/app_bloc.dart';
 import 'package:p88_admin/app/bloc/auth_bloc/auth_bloc.dart';
-import 'package:p88_admin/app/persentation/page/homepage/bloc/home_page_bloc.dart';
-import 'package:p88_admin/app/persentation/widget/loading/loading_main.dart';
-import 'package:p88_admin/app/persentation/widget/loading/loading_overlay.dart';
-import 'package:p88_admin/app/persentation/widget/snackbar.dart';
-import 'package:p88_admin/util/state_listener_helper.dart';
+import 'package:p88_admin/app/persentation/widget/snackbar/exit_snackbar.dart';
+import 'package:p88_admin/app/util/color_item.dart';
+import 'package:p88_admin/app/util/state_listener_helper.dart';
 
 class AuthContainer extends StatefulWidget {
   const AuthContainer({
     super.key,
-    required Widget widget,
+    required Widget body,
+    this.bottomNavigationBar,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
     this.appBar
-  }):_widget=widget;
+  }):_widget=body;
 
   final Widget _widget;
   final PreferredSizeWidget? appBar;
+  final Widget? bottomNavigationBar;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
 
   @override
   State<AuthContainer> createState() => _AuthContainerState();
@@ -29,6 +33,9 @@ class _AuthContainerState extends State<AuthContainer> {
     final bloc = BlocProvider.of<AuthBloc>(context);
     return Scaffold(
       appBar: widget.appBar,
+      floatingActionButtonLocation: widget.floatingActionButtonLocation,
+      floatingActionButton: widget.floatingActionButton,
+      bottomNavigationBar: widget.bottomNavigationBar,
       body: BlocListener<AuthBloc, AuthState>(
         bloc: bloc,
         listenWhen: (previous, current) {
@@ -38,7 +45,7 @@ class _AuthContainerState extends State<AuthContainer> {
           return false;
         },
         listener: (context, state) {
-          StateListenerHelper().showAuthErrorSnackbar(state, context);
+          StateListenerHelper().showAuthErrorSnackbar(state);
           StateListenerHelper().loading<AuthLoadingState>(state, context);
         },
         child: renderWidget 
