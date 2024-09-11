@@ -11,7 +11,16 @@ final class HomepageInitial extends HomeState {}
 
 final class LoadingHomeState extends HomeState {}
 
-final class SuccessHomeState extends HomeState {}
+final class SuccessHomeState extends HomeState {
+  const SuccessHomeState({
+    this.isShowMainData = false,
+  });
+
+  final bool isShowMainData;
+
+  @override
+  List<Object> get props => [isShowMainData];
+}
 
 final class ErrorHomeState extends HomeState {
   ErrorHomeState({

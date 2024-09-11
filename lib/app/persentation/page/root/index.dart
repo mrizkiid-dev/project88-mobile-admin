@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,26 +54,22 @@ class _RootPageState extends State<RootPage> {
       onBackButtonPressed: () async {
         return await controller.onBackButtonPressed(context);
       },
-      child: Scaffold(
-        appBar: AppBarDefault(actions: [
-          NotifcationButton(onPressed: () {
-            context.push(Pages.NOTIFICATION_PATH);
-          },),
-        ],),
-        bottomNavigationBar: bottomNavbar(context, rootPagebloc: rootPageBloc),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: floatingActionButton(rootPageBloc),
-        body: BlocConsumer<RootPageBloc, RootPageState>(
-          listener: (context, state) {
-            HideSnackbar().run();
-          },
-          // bloc: rootPageBloc,
-          builder: (context, state) {
-            controller.resetExitTap();
-            
-            return mainPage(state.enumRootPage);
-          },
-        ),
+      child: BlocConsumer<RootPageBloc, RootPageState>(
+        listener: (context, state) {
+          HideSnackbar().run();
+        },
+        builder: (context, state) {
+          controller.resetExitTap();
+          return Scaffold(
+            appBar: _appBar(state.enumRootPage),
+            bottomNavigationBar:
+                bottomNavbar(context, rootPagebloc: rootPageBloc),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: floatingActionButton(rootPageBloc),
+            body: mainPage(state.enumRootPage),
+          );
+        },
       ),
     );
   }
@@ -89,7 +84,63 @@ class _RootPageState extends State<RootPage> {
     };
   }
 
-  Widget bottomNavbar(BuildContext context, {required RootPageBloc rootPagebloc}) {
+  PreferredSizeWidget _appBar(EnumRootPage value) {
+    return switch (value) {
+      EnumRootPage.homepage => AppBarDefault(
+          actions: [
+            NotifcationButton(
+              onPressed: () {
+                context.push(Pages.NOTIFICATION_PATH);
+              },
+            ),
+          ],
+          isCenter: true,
+        ),
+      EnumRootPage.product => AppBarDefault(
+          title: 'product',
+          actions: [
+            NotifcationButton(
+              onPressed: () {
+                context.push(Pages.NOTIFICATION_PATH);
+              },
+            ),
+          ],
+        ),
+      EnumRootPage.order => AppBarDefault(
+          title: 'order',
+          actions: [
+            NotifcationButton(
+              onPressed: () {
+                context.push(Pages.NOTIFICATION_PATH);
+              },
+            ),
+          ],
+        ),
+      EnumRootPage.chat => AppBarDefault(
+          title: 'chat',
+          actions: [
+            NotifcationButton(
+              onPressed: () {
+                context.push(Pages.NOTIFICATION_PATH);
+              },
+            ),
+          ],
+        ),
+      EnumRootPage.profile => AppBarDefault(
+          title: 'product',
+          actions: [
+            NotifcationButton(
+              onPressed: () {
+                context.push(Pages.NOTIFICATION_PATH);
+              },
+            ),
+          ],
+        ),
+    };
+  }
+
+  Widget bottomNavbar(BuildContext context,
+      {required RootPageBloc rootPagebloc}) {
     return BottomAppBar(
       height: 74,
       elevation: 20,
@@ -105,10 +156,11 @@ class _RootPageState extends State<RootPage> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 iconBottomAppBar(
-                    onPressed: controller.onPressedHomeIcon,
-                    icon: Icons.home_rounded,
-                    title: 'home',
-                    isActive: controller.checkIfHomePage(state),),
+                  onPressed: controller.onPressedHomeIcon,
+                  icon: Icons.home_rounded,
+                  title: 'home',
+                  isActive: controller.checkIfHomePage(state),
+                ),
                 iconBottomAppBar(
                     onPressed: controller.onPressedProductIcon,
                     icon: Icons.amp_stories_rounded,
@@ -162,7 +214,7 @@ class _RootPageState extends State<RootPage> {
     return FloatingActionButton(
       onPressed: controller.onPressedOrderIcon,
       tooltip: 'Order',
-      child: Icon(Icons.add),
+      child: Icon(Icons.assignment),
       elevation: 2.0,
       shape:
           CircleBorder(side: BorderSide(color: ColorItem.tertiary, width: 1)),

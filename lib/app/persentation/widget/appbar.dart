@@ -6,18 +6,20 @@ class AppBarDefault extends StatelessWidget implements PreferredSizeWidget {
   AppBarDefault({
     super.key,
     String? title,
-    List<Widget>? actions
-  }): _title=title, _actions=actions;
+    List<Widget>? actions,
+    bool isCenter = false
+  }): _title=title, _actions=actions, _isCenter=isCenter;
 
   final String? _title;
   final List<Widget>? _actions;
+  final bool _isCenter;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(_title ?? UtilConstanta.title),
       scrolledUnderElevation: 0,
-      centerTitle: true,
+      centerTitle: _isCenter,
       shape: Border(
           bottom:
               BorderSide(width: 1, color: ColorItem.tertiary.withOpacity(0.2))),

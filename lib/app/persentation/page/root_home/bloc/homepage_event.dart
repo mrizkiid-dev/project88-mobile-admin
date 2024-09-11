@@ -7,6 +7,6 @@ sealed class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class HomeInitial extends HomeEvent {
-  const HomeInitial();
+final class InitiaHomeEvent extends HomeEvent {
+  const InitiaHomeEvent();
 }

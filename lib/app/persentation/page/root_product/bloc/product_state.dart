@@ -11,7 +11,7 @@ final class InitialProductState extends ProductState {}
 
 final class LoadingProductState extends ProductState {}
 
-final class SuccessOrderState extends ProductState {}
+final class SuccessProductState extends ProductState {}
 
 final class ErrorProductState extends ProductState {
   ErrorProductState({

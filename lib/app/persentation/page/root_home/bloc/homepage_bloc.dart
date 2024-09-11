@@ -10,11 +10,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({
     required GetUserUsecase getUserUseCase,
   }) : super(HomepageInitial()) {
-    on<HomeInitial>((event, emit) async{
+    on<InitiaHomeEvent>((event, emit) async{
       try {
         emit(LoadingHomeState());
-        final response = await getUserUseCase.execute();
+        // final response = await getUserUseCase.execute();
+        await Future.delayed(Duration(seconds: 2));
         emit(SuccessHomeState());
+        // throw 'a';
       } on NetworkFailure catch(e) {
         emit(ErrorHomeState(message: 'aduh amboyy'));
       } catch (e) {

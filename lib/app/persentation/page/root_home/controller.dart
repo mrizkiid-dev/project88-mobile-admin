@@ -23,6 +23,9 @@ class HomeController extends Controller {
   void initState() {
   }
 
+  onTryAgain() {
+    _homeBloc?.add(InitiaHomeEvent());
+  }
   
   
 }
